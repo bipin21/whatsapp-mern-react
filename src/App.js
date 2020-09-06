@@ -4,10 +4,13 @@ import './App.css';
 import Sidebar from './Sidebar';
 import Chat from './Chat';
 import axios from "./axios"
+import { BrowserRouter as Router, Route, Switch, useParams } from "react-router-dom";
+import Login from './Login';
 
 function App() {
 
   const [messages, setMessages] = useState([]);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     axios.get('/messages/sync')
@@ -33,22 +36,35 @@ function App() {
     }
   }, [messages]);
 
-  // console.log(messages);
+  console.log(messages);
 
 
   return (
     <div className="app">
+      {!user ? (<Login />) :
+        <div className="app__body">
 
-      <div className="app__body">
-        {/* sidebar */}
-        <Sidebar />
+          <Router>
+            <Sidebar />
+            <Switch>
+              <Route path="/rooms/:roomId">
+                <Chat
+                  messages={messages}
+                />
+              </Route>
 
-        {/* Chat */}
-        <Chat 
-        messages={messages}
-         />
-      </div>
+              <Route path="/">
 
+              </Route>
+
+
+            </Switch>
+          </Router>
+
+        </div>
+
+
+      }
 
 
     </div>

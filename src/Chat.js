@@ -1,14 +1,38 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import "./Chat.css";
 import { Avatar, IconButton } from '@material-ui/core';
 import { SearchOutlined, AttachFile, MoreVert } from '@material-ui/icons';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import MicIcon from '@material-ui/icons/Mic';
 import axios from './axios';
+import { useParams } from 'react-router-dom';
+import db from './firebase';
 
 function Chat({ messages }) {
 
     const [input, setInput] = useState('');
+    const [seed, setSeed] = useState('');
+    const [roomName, setRoomName] = useState('');
+    const { roomId } = useParams();
+
+    useEffect(() => {
+        if (roomId) {
+            db.collection('rooms').doc(roomId).onSnapshot(snapshot => (
+                setRoomName(snapshot.data().name)
+            ))
+        }
+        else {
+
+        }
+
+    }, [roomId])
+
+    useEffect(() => {
+        setSeed(Math.floor(Math.random() * 5000));
+
+    }, [roomId])
+
+
     const sendMessage = async (e) => {
         e.preventDefault();
 
@@ -27,10 +51,10 @@ function Chat({ messages }) {
     return (
         <div className="chat">
             <div className="chat_header">
-                <Avatar />
+                <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
 
                 <div className="chat__headerInfo">
-                    <h3>Room name</h3>
+                    <h3>{roomName}</h3>
                     <p>Last seen at...</p>
 
                 </div>

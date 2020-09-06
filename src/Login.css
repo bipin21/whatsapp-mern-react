@@ -2,30 +2,33 @@
   display: grid;
   place-items: center;
   height: 100vh;
+  background-color: #f8f8f8;
+  width: 100vw;
 }
 
-.login > div > img {
+.login__container {
+  padding: 100px;
+  text-align: center;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.login__container > img {
   object-fit: contain;
-  height: 150px;
+  height: 70px;
+  margin-bottom: 40px;
 }
 
-.login__logo > img {
-  object-fit: contain;
-  height: 150px;
+.login__container > button {
+  background-color: #0a8d48 !important;
+  color: #ffffff;
+  margin-top: 50px;
+  text-transform: inherit !important;
 }
 
-.login > div {
-  display: flex;
-  flex-direction: column;
-}
-
-.login > button {
-  background-color: #2e81f4;
-  color: #eff2f5;
-  width: 300px;
-  font-weight: 800;
-}
-.login > button:hover {
+/* .login__container > button:hover {
   background-color: #ffffff;
-  color: #2e81f4;
-}
+  color: #0a8d48;
+  text-transform: inherit !important;
+} */

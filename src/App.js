@@ -6,14 +6,15 @@ import Chat from './Chat';
 import axios from "./axios"
 import { BrowserRouter as Router, Route, Switch, useParams } from "react-router-dom";
 import Login from './Login';
+import { useStateValue } from './StateProvider';
 
 function App() {
 
   const [messages, setMessages] = useState([]);
-  const [user, setUser] = useState(null);
+  const [{ user }, dispatch] = useStateValue();
 
   useEffect(() => {
-    axios.get('/messages/sync')
+    axios.get(`/messages/sync`)
       .then(response => {
         setMessages(response.data);
       })
@@ -36,7 +37,7 @@ function App() {
     }
   }, [messages]);
 
-  console.log(messages);
+  // console.log(messages[messages.length-1].timestamp)
 
 
   return (

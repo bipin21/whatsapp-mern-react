@@ -7,13 +7,18 @@ import MicIcon from '@material-ui/icons/Mic';
 import axios from './axios';
 import { useParams } from 'react-router-dom';
 import db from './firebase';
+import { useStateValue } from './StateProvider';
+import Pusher from 'pusher-js';
 
-function Chat({ messages }) {
-
+function Chat({messages}) {
+    
     const [input, setInput] = useState('');
     const [seed, setSeed] = useState('');
     const [roomName, setRoomName] = useState('');
     const { roomId } = useParams();
+    const [{ user }, dispatch] = useStateValue();
+
+
 
     useEffect(() => {
         if (roomId) {
@@ -38,14 +43,16 @@ function Chat({ messages }) {
 
         axios.post("/messages/new", {
             message: input,
-            name: "Bp1",
+            name: user.displayName,
             timestamp: new Date().toString(),
-            recieved: false
+            recieved: false,
+            roomId: roomId
         });
 
         setInput('');
 
     }
+    // console.log(messages)
 
 
     return (
@@ -55,7 +62,9 @@ function Chat({ messages }) {
 
                 <div className="chat__headerInfo">
                     <h3>{roomName}</h3>
-                    <p>Last seen at...</p>
+                    <p>Last seen {messages[messages.length - 1]?.timestamp}
+                        {/* {messages ? new Date(messages[0]?.timestamp?.toDate()).toUTCString() : ''} */}
+                    </p>
 
                 </div>
 
@@ -78,7 +87,8 @@ function Chat({ messages }) {
             <div className="chat__body">
                 {
                     messages.map(message => (
-                        <p className={`chat_message ${message.recieved && "chat__reciever"}`}>
+                        message.roomId == roomId && 
+                        <p className={`chat_message ${message.name === user.displayName && "chat__reciever"}`}>
                             <span className="chat__name">{message.name}</span>
                             {message.message}
                             <span className="chat__timestamp">{message.timestamp}</span>
